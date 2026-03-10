@@ -172,6 +172,30 @@ INNER JOIN film_actor AS fa
 
 
 
+
+-- 23 - Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar los actores que 
+-- han actuado categoría "Horror" y luego exclúyelos de la lista de actores.
+
+
+
+
+
+
+-- 24 - Encuentra el título de las películas que son comedias y tienen una duración mayor a 180 minutos en la tabla film.
+
+	SELECT f.title, f.length, c.name AS categoria_pelis
+		FROM film AS f			-- selecciono titulo, duracion y nombre de categoria
+	INNER JOIN film_category AS fc  
+		ON f.film_id = fc.film_id		-- hago los joins para llegar de la tabla film (f) a film_category (fc) hasta category (c)
+	INNER JOIN category AS c 
+		ON fc.category_id = c.category_id
+	WHERE c.name = 'Comedy' AND f.length > 180;  -- ya en la tabla category puedo encontrar la categoria por nombre y filtrar las mayores de 180 min.
+
+
+
+
+
+
     
 
 
