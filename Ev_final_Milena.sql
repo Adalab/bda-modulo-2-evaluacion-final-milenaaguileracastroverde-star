@@ -139,13 +139,39 @@ INNER JOIN film_actor AS fa
     
 -- 19 - Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film. 
 
-    SELECT title, length, rating  -- seleccionamos las columnas solicitadas y buscamos en rating las calificadas como R maypres de 120 minutos (2 hs)
+    SELECT title, length, rating  -- seleccionamos las columnas solicitadas y buscamos en rating las calificadas como R mayores de 120 minutos (2 hs)
 		FROM film
         WHERE rating = "R" AND length > 120;
         
 -- 20 -   Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y muestra el nombre de la categoría junto con el promedio de duración.      
         
+
+    SELECT c.name AS categoria_peli, AVG(f.length) AS promedio_duracion  -- aqui le pongo alias a las dos columnas y pido el promedio (AVG) de duracion de las peliculas
+		FROM category AS c
+	INNER JOIN film_category AS fc 
+		ON c.category_id = fc.category_id  -- una vez conectadas las tablas category (c) con film category (fc) y film (f)
+	INNER JOIN film AS f 
+		ON fc.film_id = f.film_id
+	GROUP BY c.name			-- las agrupo por nombre de categoria y saco el promedio de duracion como en el ejercicio anterior
+	HAVING AVG(f.length) > 120;
     
+    
+-- 21 - Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
+	
+    SELECT a.first_name, a.last_name,  -- este ejercicio es muy similar al anterior (20) solo que con actores y un count >5 en el having
+		COUNT(fa.film_id) AS total_pelis
+			FROM actor AS a
+	INNER JOIN film_actor AS fa
+		ON a.actor_id = fa.actor_id
+	GROUP BY a.actor_id, a.first_name, a.last_name
+	HAVING COUNT(fa.film_id) >= 5
+    
+-- 22 - Encuentra el título de todas las películas que fueron alquiladas por mas de 5 dias. Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 dias
+-- y luego selecciona las peliculas correspondientes.
+
+
+
+
     
 
 
