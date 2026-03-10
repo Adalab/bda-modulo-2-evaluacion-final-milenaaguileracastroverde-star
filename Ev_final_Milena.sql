@@ -117,7 +117,7 @@ SELECT actor_id
         
 -- 17 - Encuentra el título de todas las películas que son de la misma categoría que "Family"
 
-SELECT f.title			-- este es similar al ejercicio 13, donde debo hacer INNER JOIN desde la tabla film hasta la tabla category para encontrar "Name" con el WHERE
+	SELECT f.title			-- este es similar al ejercicio 13, donde debo hacer INNER JOIN desde la tabla film hasta la tabla category para encontrar "Name" con el WHERE
 		FROM film AS f	
 	INNER JOIN film_category AS fc 
 		ON f.film_id = fc.film_id
@@ -126,7 +126,25 @@ SELECT f.title			-- este es similar al ejercicio 13, donde debo hacer INNER JOIN
 	WHERE c.name = "Family";
     
     
--- 18 - 
+-- 18 -  Muestra el nombre y apellido de los actores que aparecen en más de 10 películas.
+
+SELECT a.first_name, a.last_name, 		-- conectamos nombre y apellido de la tabla actor (a) haciendo un inner join con el id de la tabla film_actor (fa)
+	COUNT(fa.film_id) AS total_pelis
+	FROM actor AS a
+INNER JOIN film_actor AS fa 
+	ON a.actor_id = fa.actor_id
+	GROUP BY a.actor_id, a.first_name, a.last_name  -- agrupo por ID, nombre y apellido
+	HAVING COUNT(fa.film_id) > 10;   -- cuento por film_id que sea mayor de 10
+    
+    
+-- 19 - Encuentra el título de todas las películas que son "R" y tienen una duración mayor a 2 horas en la tabla film. 
+
+    SELECT title, length, rating  -- seleccionamos las columnas solicitadas y buscamos en rating las calificadas como R maypres de 120 minutos (2 hs)
+		FROM film
+        WHERE rating = "R" AND length > 120;
+        
+-- 20 -   Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y muestra el nombre de la categoría junto con el promedio de duración.      
+        
     
     
 
