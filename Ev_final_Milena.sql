@@ -111,18 +111,18 @@ SELECT actor_id
     
 -- 16 - Encuentra el título de todas las películas que fueron lanzadas entre el año 2005 y 2010.
 
-    SELECT title, release_year
-		FROM film
-        WHERE release_year BETWEEN "2005" AND "2010";
+SELECT title, release_year
+	FROM film
+	WHERE release_year BETWEEN "2005" AND "2010";
         
 -- 17 - Encuentra el título de todas las películas que son de la misma categoría que "Family"
 
-	SELECT f.title			-- este es similar al ejercicio 13, donde debo hacer INNER JOIN desde la tabla film hasta la tabla category para encontrar "Name" con el WHERE
-		FROM film AS f	
-	INNER JOIN film_category AS fc 
-		ON f.film_id = fc.film_id
-	INNER JOIN category AS c 
-		ON fc.category_id = c.category_id
+SELECT f.title			-- este es similar al ejercicio 13, donde debo hacer INNER JOIN desde la tabla film hasta la tabla category para encontrar "Name" con el WHERE
+	FROM film AS f	
+INNER JOIN film_category AS fc 
+	ON f.film_id = fc.film_id
+INNER JOIN category AS c 
+	ON fc.category_id = c.category_id
 	WHERE c.name = "Family";
     
     
@@ -158,26 +158,45 @@ INNER JOIN film_actor AS fa
     
 -- 21 - Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.
 	
-    SELECT a.first_name, a.last_name,  -- este ejercicio es muy similar al anterior (20) solo que con actores y un count >5 en el having
-		COUNT(fa.film_id) AS total_pelis
-			FROM actor AS a
-	INNER JOIN film_actor AS fa
-		ON a.actor_id = fa.actor_id
-	GROUP BY a.actor_id, a.first_name, a.last_name
-	HAVING COUNT(fa.film_id) >= 5
+SELECT a.first_name, a.last_name,  -- este ejercicio es muy similar al anterior (20) solo que con actores y un count >5 en el having
+	COUNT(fa.film_id) AS total_pelis
+		FROM actor AS a
+INNER JOIN film_actor AS fa
+	ON a.actor_id = fa.actor_id
+GROUP BY a.actor_id, a.first_name, a.last_name
+	HAVING COUNT(fa.film_id) >= 5;
     
 -- 22 - Encuentra el título de todas las películas que fueron alquiladas por mas de 5 dias. Utiliza una subconsulta para encontrar los rental_ids con una duración superior a 5 dias
--- y luego selecciona las peliculas correspondientes.
+-- y luego selecciona las peliculas correspondientes
 
-
+SELECT title
+	FROM film
+	WHERE film_id IN (         
+			SELECT i.film_id
+			FROM rental AS r
+		INNER JOIN inventory AS i 
+			ON r.inventory_id = i.inventory_id
+			WHERE (r.return_date - r.rental_date) > '5 days'); 
+-- en esta subconsulta podemos saber cuales fueron las peliculas que se alquilaron por mas de 5 dias utilizando el operador de comparacion (-) ya que solo tenemos la fecha de alquiler y devolucion
 
 
 
 -- 23 - Encuentra el nombre y apellido de los actores que no han actuado en ninguna película de la categoría "Horror". Utiliza una subconsulta para encontrar los actores que 
 -- han actuado categoría "Horror" y luego exclúyelos de la lista de actores.
 
-
-
+SELECT first_name, last_name
+	FROM actor
+WHERE actor_id NOT IN (
+		SELECT fa.actor_id
+			FROM film_actor AS fa
+		INNER JOIN film_category AS fc 
+			ON fa.film_id = fc.film_id
+		INNER JOIN category AS c 
+			ON fc.category_id = c.category_id
+		WHERE c.name = 'Horror'); 
+        
+	-- en esta subconsulta primero averiguamos que actores trabajaron en la categoria 'Horror' haciendo INNER JOIN desde la tabla fa, hasta c para luego poder excluir el actor_id en el WHERE con un NOT IN
+ -- es similar al ejercicio 22
 
 
 
